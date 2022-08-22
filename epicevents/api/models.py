@@ -17,7 +17,7 @@ class Client(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)
     sales_contact = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='clients', blank=True, null=True)
+        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='clients', blank=True, null=True)
     status = models.BooleanField(default=False)
 
     def __str__(self):
@@ -27,9 +27,9 @@ class Client(models.Model):
 class Contract(models.Model):
     id = models.AutoField(primary_key=True)
     sales_contact = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='contrats')
+        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='contrats')
     client = models.ForeignKey(
-        to=Client, on_delete=models.DO_NOTHING, related_name='contracts')
+        to=Client, on_delete=models.CASCADE, related_name='contracts')
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=False)
@@ -40,11 +40,11 @@ class Contract(models.Model):
 class Event(models.Model):
     id = models.AutoField(primary_key=True)
     client = models.ForeignKey(
-        to=Client, on_delete=models.DO_NOTHING, related_name='events')
+        to=Client, on_delete=models.CASCADE, related_name='events')
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)
     support_contact = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='events')
+        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='events')
     event_status = models.BooleanField(default=True)
     attendees = models.PositiveIntegerField()
     event_date = models.DateTimeField()
