@@ -36,16 +36,25 @@ class Contract(models.Model):
     amount = models.FloatField()
     payment_due = models.DateTimeField()
 
+    def __str__(self):
+        return '%s' % (self.id)
+
 
 class Event(models.Model):
     id = models.AutoField(primary_key=True)
-    client = models.ForeignKey(
-        to=Client, on_delete=models.CASCADE, related_name='events')
+    contract_id = models.ForeignKey(
+        to=Contract, on_delete=models.CASCADE, related_name='events', blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)
     support_contact = models.ForeignKey(
         to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='events')
-    event_status = models.BooleanField(default=True)
+    STATUS_CHOICE = (
+        ('1', 'ToDo'),
+        ('2', 'InProgress'),
+        ('3', 'Completed'),
+    )
+    event_status = models.CharField(
+        max_length=1, choices=STATUS_CHOICE, default='1')
     attendees = models.PositiveIntegerField()
     event_date = models.DateTimeField()
     notes = models.TextField()
