@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
-from api.models import Client, Contract, Event
+from api.models import Client, Contract, Event, EventStatus
 
 # Register your models here.
 
@@ -44,7 +44,12 @@ class ContractAdmin(admin.ModelAdmin):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ['contract_id', 'date_created', 'date_updated',
-                    'support_contact', 'event_status', 'attendees', 'event_date', 'notes']
+    list_display = ['contract_id', 'event_status', 'date_created', 'date_updated',
+                    'support_contact', 'attendees', 'event_date', 'notes']
     list_filter = ('contract_id',)
     search_fields = ['contract_id']
+
+
+@admin.register(EventStatus)
+class EventStatusAdmin(admin.ModelAdmin):
+    list_display = ['status']
