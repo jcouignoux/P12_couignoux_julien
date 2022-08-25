@@ -16,7 +16,7 @@ from api.serializers import (UserListSerializer,
                              ContractDetailSerializer,
                              EventListSerializer,
                              EventDetailSerializer)
-from api.permissions import ManagePermission, SalePermission, SupportPermission
+from api.permissions import MemberPermission, ClientPermission, ContractPermission, EventPermission
 # Create your views here.
 
 
@@ -39,12 +39,12 @@ class UserViewset(MultipleSerializerMixin, ModelViewSet):
 
     serializer_class = UserListSerializer
     detail_serializer_class = UserDetailSerializer
-    permission_classes = [ManagePermission]
+    permission_classes = [MemberPermission]
 
     def get_queryset(self):
-        query = ~Q(groups__name='Management')
+        # query = ~Q(groups__name='Management')
 
-        return User.objects.filter(query, is_superuser=False)
+        return User.objects.filter(is_superuser=False)
 
     # @transaction.atomic
     # def create(self, request, *args, **kwargs):
@@ -62,7 +62,7 @@ class ClientViewset(MultipleSerializerMixin, ModelViewSet):
 
     serializer_class = ClientListSerializer
     detail_serializer_class = ClientDetailSerializer
-    permission_classes = [SalePermission | ManagePermission]
+    permission_classes = [ClientPermission]
 
     def get_queryset(self):
 
@@ -73,7 +73,7 @@ class ContractViewset(MultipleSerializerMixin, ModelViewSet):
 
     serializer_class = ContractListSerializer
     detail_serializer_class = ContractDetailSerializer
-    permission_classes = [SalePermission | ManagePermission]
+    permission_classes = [ContractPermission]
 
     def get_queryset(self):
 
@@ -84,8 +84,7 @@ class EventViewset(MultipleSerializerMixin, ModelViewSet):
 
     serializer_class = EventListSerializer
     detail_serializer_class = EventDetailSerializer
-    permission_classes = [SalePermission |
-                          SupportPermission | ManagePermission]
+    permission_classes = [EventPermission]
 
     def get_queryset(self):
 
