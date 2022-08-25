@@ -31,7 +31,7 @@ class Client(models.Model):
 class Contract(models.Model):
     id = models.AutoField(primary_key=True)
     sales_contact = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='contacts')
+        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='contacts', limit_choices_to=Q(groups__name='Sales'))
     client = models.ForeignKey(
         to=Client, on_delete=models.CASCADE, related_name='contracts')
     date_created = models.DateTimeField(auto_now_add=True)
