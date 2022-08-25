@@ -8,6 +8,8 @@ from api.views import index, UserViewset, ClientViewset, ContractViewset, EventV
 router = routers.SimpleRouter()
 router.register('members', UserViewset, basename='members')
 router.register('clients', ClientViewset, basename='clients')
+router.register('contracts', ContractViewset, basename='contracts')
+router.register('events', EventViewset, basename='events')
 
 clients_router = NestedSimpleRouter(router, 'clients', lookup='client')
 clients_router.register('contracts', ContractViewset,

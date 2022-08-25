@@ -24,7 +24,7 @@ class ClientListSerializer(ModelSerializer):
 
     class Meta:
         model = Client
-        fields = ['id', 'first_name', 'last_name',
+        fields = ['id', 'first_name', 'last_name', 'email',
                   'company_name', 'sales_contact']
 
 
@@ -34,7 +34,7 @@ class ClientDetailSerializer(ModelSerializer):
 
     class Meta:
         model = Client
-        fields = ['first_name', 'last_name',
+        fields = ['first_name', 'last_name', 'email',
                   'company_name', 'contracts', 'sales_contact']
 
     def get_contracts(self, instance):

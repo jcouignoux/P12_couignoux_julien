@@ -6,6 +6,7 @@ from django.db.models import Q
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from django_filters.rest_framework import DjangoFilterBackend
 
 from api.models import Client, Contract, Event
 from api.serializers import (UserListSerializer,
@@ -40,22 +41,12 @@ class UserViewset(MultipleSerializerMixin, ModelViewSet):
     serializer_class = UserListSerializer
     detail_serializer_class = UserDetailSerializer
     permission_classes = [MemberPermission]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['username']
 
     def get_queryset(self):
-        # query = ~Q(groups__name='Management')
 
         return User.objects.filter(is_superuser=False)
-
-    # @transaction.atomic
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     user = User.serializer.save()
-
-    #     return Response({
-    #         'project': UserListSerializer(user, context=self.get_serializer_context()).data,
-    #         'message': "Member created successfully."},
-    #         status=status.HTTP_201_CREATED)
 
 
 class ClientViewset(MultipleSerializerMixin, ModelViewSet):
@@ -63,6 +54,8 @@ class ClientViewset(MultipleSerializerMixin, ModelViewSet):
     serializer_class = ClientListSerializer
     detail_serializer_class = ClientDetailSerializer
     permission_classes = [ClientPermission]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['last_name', 'email']
 
     def get_queryset(self):
 
@@ -74,10 +67,17 @@ class ContractViewset(MultipleSerializerMixin, ModelViewSet):
     serializer_class = ContractListSerializer
     detail_serializer_class = ContractDetailSerializer
     permission_classes = [ContractPermission]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['client', 'client__email', 'date_created', 'amount']
 
     def get_queryset(self):
+        print(self.kwargs)
+        if 'client_pk' in self.kwargs:
+            queryset = Contract.objects.filter(client=self.kwargs['client_pk'])
+        else:
+            queryset = Contract.objects.all()
 
-        return Contract.objects.filter(client=self.kwargs['client_pk'])
+        return queryset
 
 
 class EventViewset(MultipleSerializerMixin, ModelViewSet):
@@ -85,7 +85,16 @@ class EventViewset(MultipleSerializerMixin, ModelViewSet):
     serializer_class = EventListSerializer
     detail_serializer_class = EventDetailSerializer
     permission_classes = [EventPermission]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['contract_id__client__last_name',
+                        'contract_id__client__email', 'event_date']
 
     def get_queryset(self):
 
-        return Event.objects.filter(contract_id=self.kwargs['contract_pk'])
+        if 'contract_pk' in self.kwargs:
+            queryset = Event.objects.filter(
+                contract_id=self.kwargs['contract_pk'])
+        else:
+            queryset = Event.objects.all()
+
+        return queryset
