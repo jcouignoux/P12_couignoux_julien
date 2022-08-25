@@ -24,7 +24,8 @@ class ClientListSerializer(ModelSerializer):
 
     class Meta:
         model = Client
-        fields = ['id', 'first_name', 'last_name', 'company_name']
+        fields = ['id', 'first_name', 'last_name',
+                  'company_name', 'sales_contact']
 
 
 class ClientDetailSerializer(ModelSerializer):
@@ -33,7 +34,8 @@ class ClientDetailSerializer(ModelSerializer):
 
     class Meta:
         model = Client
-        fields = ['first_name', 'last_name', 'company_name', 'contracts']
+        fields = ['first_name', 'last_name',
+                  'company_name', 'contracts', 'sales_contact']
 
     def get_contracts(self, instance):
         queryset = Contract.objects.filter(client=instance)
@@ -67,14 +69,12 @@ class EventListSerializer(ModelSerializer):
     class Meta:
         model = Event
         fields = ['id', 'contract_id',
-                  'support_contact_id', 'event_status', 'notes']
+                  'support_contact', 'event_status', 'notes']
 
 
 class EventDetailSerializer(ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ['event_date', 'support_contact_id',
+        fields = ['event_date', 'support_contact', 'contract_id',
                   'event_status', 'attendees', 'notes']
-        read_only_fields = ['id', 'contract_id',
-                            'date_created', 'date_updated']

@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 
 # Create your models here.
@@ -20,7 +21,7 @@ class Client(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)
     sales_contact = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='clients', blank=True, null=True)
+        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='clients', blank=True, null=True, limit_choices_to=Q(groups__name='Sales'))
     status = models.BooleanField(default=False)
 
     def __str__(self):
@@ -58,7 +59,7 @@ class Event(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)
     support_contact = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='events')
+        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='events', limit_choices_to=Q(groups__name='Support'))
     event_status = models.ForeignKey(
         to=EventStatus, on_delete=models.CASCADE, default=1)
     attendees = models.PositiveIntegerField()

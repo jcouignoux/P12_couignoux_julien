@@ -62,7 +62,7 @@ class ClientViewset(MultipleSerializerMixin, ModelViewSet):
 
     serializer_class = ClientListSerializer
     detail_serializer_class = ClientDetailSerializer
-    permission_classes = [SalePermission]
+    permission_classes = [SalePermission | ManagePermission]
 
     def get_queryset(self):
 
@@ -73,7 +73,7 @@ class ContractViewset(MultipleSerializerMixin, ModelViewSet):
 
     serializer_class = ContractListSerializer
     detail_serializer_class = ContractDetailSerializer
-    permission_classes = [SalePermission]
+    permission_classes = [SalePermission | ManagePermission]
 
     def get_queryset(self):
 
@@ -84,7 +84,8 @@ class EventViewset(MultipleSerializerMixin, ModelViewSet):
 
     serializer_class = EventListSerializer
     detail_serializer_class = EventDetailSerializer
-    permission_classes = [SalePermission | SupportPermission]
+    permission_classes = [SalePermission |
+                          SupportPermission | ManagePermission]
 
     def get_queryset(self):
 
