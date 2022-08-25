@@ -1,8 +1,11 @@
 from django.shortcuts import render
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+from django.db import transaction, IntegrityError
 from django.db.models import Q
 
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.response import Response
+from rest_framework import status
 
 from api.models import Client, Contract, Event
 from api.serializers import (UserListSerializer,
@@ -42,6 +45,17 @@ class UserViewset(MultipleSerializerMixin, ModelViewSet):
         query = ~Q(groups__name='Management')
 
         return User.objects.filter(query, is_superuser=False)
+
+    # @transaction.atomic
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     user = User.serializer.save()
+
+    #     return Response({
+    #         'project': UserListSerializer(user, context=self.get_serializer_context()).data,
+    #         'message': "Member created successfully."},
+    #         status=status.HTTP_201_CREATED)
 
 
 class ClientViewset(MultipleSerializerMixin, ModelViewSet):

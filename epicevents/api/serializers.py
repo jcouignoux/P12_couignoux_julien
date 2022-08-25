@@ -9,16 +9,15 @@ class UserListSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'groups']
+        fields = ['id', 'username', 'first_name',
+                  'last_name', 'groups']
 
 
 class UserDetailSerializer(ModelSerializer):
 
-    issues = SerializerMethodField()
-
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'groups']
+        fields = ['id', 'username', 'first_name', 'last_name', 'groups']
 
 
 class ClientListSerializer(ModelSerializer):
