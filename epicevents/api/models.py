@@ -1,9 +1,12 @@
-from pyexpat import model
 from django.conf import settings
 from django.db import models
+from django.contrib.auth.models import User
 
 
 # Create your models here.
+
+class Staff(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
 class Client(models.Model):
@@ -36,16 +39,28 @@ class Contract(models.Model):
     amount = models.FloatField()
     payment_due = models.DateTimeField()
 
+    def __str__(self):
+        return '%s' % (self.id)
+
+
+class EventStatus(models.Model):
+    id = models.AutoField(primary_key=True)
+    status = models.CharField(max_length=10)
+
+    def __str__(self):
+        return '%s' % (self.status)
+
 
 class Event(models.Model):
     id = models.AutoField(primary_key=True)
-    client = models.ForeignKey(
-        to=Client, on_delete=models.CASCADE, related_name='events')
+    contract_id = models.ForeignKey(
+        to=Contract, on_delete=models.CASCADE, related_name='events', blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)
     support_contact = models.ForeignKey(
         to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='events')
-    event_status = models.BooleanField(default=True)
+    event_status = models.ForeignKey(
+        to=EventStatus, on_delete=models.CASCADE, default=1)
     attendees = models.PositiveIntegerField()
     event_date = models.DateTimeField()
     notes = models.TextField()
