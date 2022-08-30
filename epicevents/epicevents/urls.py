@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from staff.views import LoginAPIView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/staff/', include(('staff.urls', 'staff'), namespace='staff')),
@@ -23,4 +25,5 @@ urlpatterns = [
     path('api/contracts/', include(('contracts.urls',
          'contracts'), namespace='contracts')),
     path('api/events/', include(('events.urls', 'events'), namespace='events')),
+    path('login/', LoginAPIView.as_view(), name='login'),
 ]
