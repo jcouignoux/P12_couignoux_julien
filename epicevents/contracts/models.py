@@ -18,7 +18,7 @@ class Contract(models.Model):
     date_updated = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=False)
     amount = models.FloatField()
-    payment_due = models.DateTimeField()
+    payment_due = models.DateField()
 
     def __str__(self):
         return '%s' % (self.id)
