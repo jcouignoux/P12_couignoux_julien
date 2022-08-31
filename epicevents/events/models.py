@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
-from contracts.models import Contract
+# from contracts.models import Contract
 
 # Create your models here.
 
@@ -21,8 +21,6 @@ class EventStatus(models.Model):
 
 class Event(models.Model):
     id = models.AutoField(primary_key=True)
-    contract_id = models.ForeignKey(
-        to=Contract, on_delete=models.CASCADE, related_name='events', blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)
     support_contact = models.ForeignKey(
@@ -32,3 +30,6 @@ class Event(models.Model):
     attendees = models.PositiveIntegerField()
     event_date = models.DateField()
     notes = models.TextField()
+
+    def __str__(self):
+        return '%s' % (self.id)

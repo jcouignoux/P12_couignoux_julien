@@ -72,7 +72,7 @@ class EventPermission(BasePermission):
         elif request.method == "PUT":
             return bool(authenticated(request) and (management(request) or request.user.groups.filter(name="Support").exists()))
         else:
-            return bool(authenticated(request) and request.user.groups.filter(name="Support").exists())
+            return bool(authenticated(request) and request.user.groups.filter(name__in=["Support", "Sales"]).exists())
 
     def has_object_permission(self, request, view, obj):
         is_reponsible = bool(obj.support_contact == request.user)
