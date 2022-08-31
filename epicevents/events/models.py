@@ -30,5 +30,5 @@ class Event(models.Model):
     event_status = models.ForeignKey(
         to=EventStatus, on_delete=models.CASCADE, default=1)
     attendees = models.PositiveIntegerField()
-    event_date = models.DateTimeField()
+    event_date = models.DateField()
     notes = models.TextField()
