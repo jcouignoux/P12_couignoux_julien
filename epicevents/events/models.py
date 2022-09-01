@@ -3,14 +3,19 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
-# from contracts.models import Contract
-
 # Create your models here.
 
 
 class EventStatus(models.Model):
+
+    class Status(models.TextChoices):
+        OPEN = 'OP', _('Open')
+        INPROGRESS = 'IP', _('In Progress')
+        CLOSED = 'CL', _('Closed')
+
     id = models.AutoField(primary_key=True)
-    status = models.CharField(max_length=10)
+    status = models.CharField(
+        max_length=10, choices=Status.choices, default=Status.OPEN)
 
     def __str__(self):
         return '%s' % (self.status)
