@@ -31,7 +31,7 @@ class Event(models.Model):
     support_contact = models.ForeignKey(
         to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='events', limit_choices_to=Q(groups__name='Support'))
     event_status = models.ForeignKey(
-        to=EventStatus, on_delete=models.CASCADE, default=1)
+        to=EventStatus, on_delete=models.CASCADE, default='OP')
     attendees = models.PositiveIntegerField()
     event_date = models.DateField()
     notes = models.TextField()
