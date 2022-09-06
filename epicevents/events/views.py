@@ -51,33 +51,39 @@ class EventViewset(MultipleSerializerMixin, ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        # contract_id = serializer.data['contract']
-        # if Contract.objects.filter(id=contract_id).first().event_id is not None:
-        #     return Response({
-        #         'event': EventListSerializer(serializer, context=self.get_serializer_context()).data,
-        #         'message': "Contract has already an envent."},
-        #         status=status.HTTP_304_NOT_MODIFIED)
-        # else:
-        event = serializer.save()
-        contract = event.contract
-        contract.status = True
-        contract.save()
-        return Response({
-            'event': EventListSerializer(event, context=self.get_serializer_context()).data,
-            'message': "Event created successfully."},
-            status=status.HTTP_201_CREATED)
+        contract = serializer.validated_data.get('contract')
+        if contract.event_id == None:
+            event = serializer.save()
+            contract.status = True
+            contract.event_id = event
+            contract.save()
+            return Response({
+                'event': EventListSerializer(event, context=self.get_serializer_context()).data,
+                'message': "Event created successfully."},
+                status=status.HTTP_201_CREATED)
+        else:
+            # serializer.contract
+            return Response({
+                # 'event': EventListSerializer(event, context=self.get_serializer_context()).data,
+                'message': "Contract already has an event."},
+                status=status.HTTP_409_CONFLICT)
 
-    @transaction.atomic
+    @ transaction.atomic
     def update(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance=instance,
+                                         data=request.data,
+                                         )
         serializer.is_valid(raise_exception=True)
         event = serializer.save()
-        if event.event_status.status == 'Closed':
-            contract = event.client
+        contract = Contract.objects.filter(id=event.contract.id).first()
+        if event.event_status.status == 'CL':
             contract.status = False
-            contract.save()
+        if event.event_status.status == 'OP':
+            contract.status = True
+        contract.save()
 
         return Response({
             'event': EventListSerializer(event, context=self.get_serializer_context()).data,
-            'message': "Event created successfully."},
-            status=status.HTTP_201_CREATED)
+            'message': "Event updated successfully."},
+            status=status.HTTP_200_OK)
