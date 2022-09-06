@@ -1,7 +1,11 @@
 from django.contrib import admin
+from django.db import models
+from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+# from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
+from django.utils.translation import gettext_lazy as _
 
-from staff.models import User
+from staff.models import User, CustomGroup
 
 # Register your models here.
 
@@ -19,3 +23,16 @@ class UserAdmin(BaseUserAdmin):
 
 # admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+
+
+@admin.register(CustomGroup)
+class GroupAdmin(admin.ModelAdmin):
+
+    list_display = ['group']
+
+    # def permissions(self):
+    #     return self.group.permissions
+
+
+# admin.site.unregister(GroupAdmin)
+# admin.site.register(CustomGroup, GroupAdmin)
