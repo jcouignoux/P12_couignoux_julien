@@ -8,14 +8,14 @@ class UserListSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name',
-                  'last_name', 'groups']
+                  'last_name', 'role']
 
 
 class UserDetailSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'groups']
+        fields = ['id', 'username', 'first_name', 'last_name', 'role']
 
 
 class LoginSerializer(ModelSerializer):

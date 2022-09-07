@@ -45,6 +45,8 @@ class UserViewset(MultipleSerializerMixin, ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save(is_staff=True)
+        if user.role == 'MA':
+            user.group
 
         return Response({
             'project': UserListSerializer(user, context=self.get_serializer_context()).data,

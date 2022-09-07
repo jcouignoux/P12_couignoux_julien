@@ -22,6 +22,6 @@ class ContractDetailSerializer(ModelSerializer):
         fields = ['id', 'sales_contact', 'client', 'status', 'event']
 
     def get_event(self, instance):
-        queryset = Event.objects.filter(contract_id=instance).first()
+        queryset = Event.objects.filter(contract=instance).first()
         serializer = EventListSerializer(queryset, many=False)
         return serializer.data
