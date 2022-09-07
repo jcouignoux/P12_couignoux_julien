@@ -26,7 +26,8 @@ class ClientViewset(MultipleSerializerMixin, ModelViewSet):
     detail_serializer_class = ClientDetailSerializer
     permission_classes = [ClientPermission]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['last_name', 'email', 'company_name', 'status']
+    filterset_fields = ['last_name', 'email',
+                        'company_name', 'status', 'sales_contact']
     search_fields = ['last_name', 'email', 'company_name']
     ordering_fields = ['last_name', 'email', 'company_name']
 

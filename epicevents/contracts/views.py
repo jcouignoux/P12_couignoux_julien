@@ -30,7 +30,7 @@ class ContractViewset(MultipleSerializerMixin, ModelViewSet):
     permission_classes = [ContractPermission]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['client', 'client__email',
-                        'date_created', 'amount']
+                        'date_created', 'amount', 'sales_contact']
     search_fields = ['client', 'client__email', 'date_created', 'amount']
     ordering_fields = ['client', 'client__email', 'date_created', 'amount']
 

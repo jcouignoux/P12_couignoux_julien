@@ -31,7 +31,7 @@ class EventViewset(MultipleSerializerMixin, ModelViewSet):
     permission_classes = [EventPermission]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['contract__client__last_name',
-                        'contract__client__email', 'event_date']
+                        'contract__client__email', 'event_date', 'support_contact']
     search_fields = ['contract__client__last_name',
                      'contract__client__email', 'event_date']
     ordering_fields = ['contract__client__last_name',
