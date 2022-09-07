@@ -11,10 +11,10 @@ class EventListSerializer(ModelSerializer):
         fields = ['id', 'contract', 'support_contact',
                   'event_status', 'attendees', 'event_date', 'notes']
 
-    def validate_contract(self, value):
-        if Contract.objects.filter(id=value.id).first().event_id is not None:
-            raise ValidationError('Contract already has an event')
-        return value
+    # def validate_contract(self, value):
+    #     if Contract.objects.filter(id=value.id).first().event_id is not None:
+    #         raise ValidationError('Contract already has an event')
+    #     return value
 
 
 class EventDetailSerializer(ModelSerializer):
