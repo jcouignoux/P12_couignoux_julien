@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import Group
 
 from rest_framework.viewsets import ModelViewSet
 from django.db import transaction
@@ -45,13 +46,29 @@ class UserViewset(MultipleSerializerMixin, ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save(is_staff=True)
-        if user.role == 'MA':
-            user.group
+        group = Group.objects.get(name=user.Name(user.role).label)
+        group.user_set.add(user)
 
         return Response({
-            'project': UserListSerializer(user, context=self.get_serializer_context()).data,
+            'user': UserListSerializer(user, context=self.get_serializer_context()).data,
             'message': "User created successfully."},
             status=status.HTTP_201_CREATED)
+
+    @transaction.atomic
+    def update(self, request, *args, **kwargs):
+        print(self.request)
+        instance = self.get_object()
+        serializer = self.get_serializer(
+            instance=instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save(is_staff=True)
+        group = Group.objects.get(name=user.Name(user.role).label)
+        group.user_set.add(user)
+
+        return Response({
+            'user': UserListSerializer(user, context=self.get_serializer_context()).data,
+            'message': "Member updated successfully."},
+            status=status.HTTP_200_OK)
 
 
 class LoginAPIView(GenericAPIView):
