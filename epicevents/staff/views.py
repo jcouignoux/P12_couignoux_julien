@@ -56,14 +56,13 @@ class UserViewset(MultipleSerializerMixin, ModelViewSet):
 
     @transaction.atomic
     def update(self, request, *args, **kwargs):
-        print(self.request)
         instance = self.get_object()
         serializer = self.get_serializer(
             instance=instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save(is_staff=True)
         group = Group.objects.get(name=user.Name(user.role).label)
-        group.user_set.add(user)
+        user.groups.set([group])
 
         return Response({
             'user': UserListSerializer(user, context=self.get_serializer_context()).data,
