@@ -6,41 +6,24 @@ from contracts.serialisers import ContractListSerializer
 # from rest_framework.fields import CurrentUserDefault
 
 
-# class FieldMixin(object):
-#     def get_field_names(self, *args, **kwargs):
-#         print(self.context['request'].user.role)
-#         if self.context['request'].user.role == 'MA':
-#             field_names = ['id', 'first_name', 'last_name', 'email',
-#                            'company_name', 'sales_contact']
-#             extra_kwargs = {
-#                 'first_name': {
-#                     "required": None,
-#                     "read_only": True
-#                 }
-#             }
-#         else:
-#             field_names = ['id', 'first_name', 'last_name', 'email',
-#                            'company_name', 'sales_contact']
-#         if field_names:
-#             return field_names
+class FieldMixin(object):
+    def get_field_names(self, *args, **kwargs):
+        print(self.context['request'].method)
+        if self.context['request'].user.role == 'MA' and self.context['request'].method == 'PUT':
+            field_names = ['sales_contact']
+        else:
+            field_names = ['id', 'first_name', 'last_name', 'email',
+                           'company_name', 'sales_contact']
+        if field_names:
+            return field_names
 
-#         return super(FieldMixin, self).get_field_names(*args, **kwargs)
+        return super(FieldMixin, self).get_field_names(*args, **kwargs)
 
 
-class ClientListSerializer(ModelSerializer):
+class ClientListSerializer(FieldMixin, ModelSerializer):
 
     class Meta:
         model = Client
-        fields = ['id', 'first_name', 'last_name', 'email',
-                  'company_name', 'sales_contact']
-        # read_only_fields = ['sales_contact']
-
-    # def get_readonly_fields(self, request, obj=None):
-    #     print('toto')
-    #     if request.user.role == 'MA':
-    #         read_only_fields = ['id', 'first_name', 'last_name', 'email',
-    #                             'company_name']
-    #     return read_only_fields
 
 
 class ClientDetailSerializer(ModelSerializer):
