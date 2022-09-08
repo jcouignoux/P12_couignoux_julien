@@ -62,9 +62,7 @@ class EventViewset(MultipleSerializerMixin, ModelViewSet):
                 'message': "Event created successfully."},
                 status=status.HTTP_201_CREATED)
         else:
-            # serializer.contract
             return Response({
-                # 'event': EventListSerializer(event, context=self.get_serializer_context()).data,
                 'message': "Contract already has an event."},
                 status=status.HTTP_409_CONFLICT)
 

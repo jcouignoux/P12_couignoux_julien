@@ -5,7 +5,6 @@ from events.models import Event
 
 class FieldMixin(object):
     def get_field_names(self, *args, **kwargs):
-        print(self.context['request'].method)
         if self.context['request'].user.role == 'MA' and self.context['request'].method == 'PUT':
             field_names = ['support_contact']
         else:

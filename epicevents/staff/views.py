@@ -86,6 +86,7 @@ class LoginAPIView(GenericAPIView):
             login(request, user)
 
             return Response({
+                'user': UserListSerializer(user, context=self.get_serializer_context()).data,
                 'message': "User logged successfully.",
             },
                 status=status.HTTP_200_OK
