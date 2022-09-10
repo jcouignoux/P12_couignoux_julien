@@ -35,11 +35,11 @@ class ContractViewset(MultipleSerializerMixin, ModelViewSet):
     ordering_fields = ['client', 'client__email', 'date_created', 'amount']
 
     def get_queryset(self):
-        print(self.kwargs)
-        if 'client_pk' in self.kwargs:
-            queryset = Contract.objects.filter(client=self.kwargs['client_pk'])
-        else:
-            queryset = Contract.objects.all()
+        # print(self.kwargs)
+        # if 'client_pk' in self.kwargs:
+        #     queryset = Contract.objects.filter(client=self.kwargs['client_pk'])
+        # else:
+        queryset = Contract.objects.all()
 
         return queryset
 

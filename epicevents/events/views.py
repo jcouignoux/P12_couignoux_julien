@@ -39,11 +39,11 @@ class EventViewset(MultipleSerializerMixin, ModelViewSet):
 
     def get_queryset(self):
 
-        if 'contract_pk' in self.kwargs:
-            queryset = Event.objects.filter(
-                contract_id=self.kwargs['contract_pk'])
-        else:
-            queryset = Event.objects.all()
+        # if 'contract_pk' in self.kwargs:
+        #     queryset = Event.objects.filter(
+        #         contract_id=self.kwargs['contract_pk'])
+        # else:
+        queryset = Event.objects.all()
 
         return queryset
 
