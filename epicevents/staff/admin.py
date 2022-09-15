@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from staff.models import User
+from django.contrib.admin.models import LogEntry
 
 # Register your models here.
 
@@ -36,3 +37,17 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(User, UserAdmin)
+
+
+@admin.register(LogEntry)
+class LogEntryAdmin(admin.ModelAdmin):
+    list_display = [f.name for f in LogEntry._meta.get_fields()]
+    readonly_fields = [f.name for f in LogEntry._meta.get_fields()]
+
+    def get_queryset(self, request):
+        if request.user.is_superuser:
+            queryset = super(LogEntryAdmin, self).get_queryset(request)
+        else:
+            queryset = User.objects.filter(is_superuser=False)
+
+        return queryset
