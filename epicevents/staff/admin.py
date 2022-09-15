@@ -48,6 +48,6 @@ class LogEntryAdmin(admin.ModelAdmin):
         if request.user.is_superuser:
             queryset = super(LogEntryAdmin, self).get_queryset(request)
         else:
-            queryset = User.objects.filter(is_superuser=False)
+            queryset = None
 
         return queryset
