@@ -43,31 +43,37 @@ class UserViewset(MultipleSerializerMixin, ModelViewSet):
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save(is_staff=True)
-        group = Group.objects.get(name=user.Name(user.role).label)
-        group.user_set.add(user)
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            user = serializer.save(is_staff=True)
+            group = Group.objects.get(name=user.Name(user.role).label)
+            group.user_set.add(user)
 
-        return Response({
-            'user': UserListSerializer(user, context=self.get_serializer_context()).data,
-            'message': "User created successfully."},
-            status=status.HTTP_201_CREATED)
+            return Response({
+                'user': UserListSerializer(user, context=self.get_serializer_context()).data,
+                'message': "User created successfully."},
+                status=status.HTTP_201_CREATED)
+        except Exception as e:
+            raise Exception(e)
 
     @transaction.atomic
     def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(
-            instance=instance, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save(is_staff=True)
-        group = Group.objects.get(name=user.Name(user.role).label)
-        user.groups.set([group])
+        try:
+            instance = self.get_object()
+            serializer = self.get_serializer(
+                instance=instance, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            user = serializer.save(is_staff=True)
+            group = Group.objects.get(name=user.Name(user.role).label)
+            user.groups.set([group])
 
-        return Response({
-            'user': UserListSerializer(user, context=self.get_serializer_context()).data,
-            'message': "Member updated successfully."},
-            status=status.HTTP_200_OK)
+            return Response({
+                'user': UserListSerializer(user, context=self.get_serializer_context()).data,
+                'message': "Member updated successfully."},
+                status=status.HTTP_200_OK)
+        except Exception as e:
+            raise Exception(e)
 
 
 class LoginAPIView(GenericAPIView):
@@ -75,20 +81,24 @@ class LoginAPIView(GenericAPIView):
     serializer_class = LoginSerializer
 
     def post(self, request):
-        username = request.data.get('username', None)
-        password = request.data.get('password', None)
+        try:
+            username = request.data.get('username', None)
+            password = request.data.get('password', None)
 
-        user = authenticate(request, username=username, password=password)
+            user = authenticate(request, username=username, password=password)
 
-        if user:
-            serializer = self.serializer_class(user)
-            login(request, user)
+            if user:
+                serializer = self.serializer_class(user)
+                login(request, user)
 
-            return Response({
-                'user': UserListSerializer(user, context=self.get_serializer_context()).data,
-                'message': "User logged successfully.",
-            },
-                status=status.HTTP_200_OK
-            )
+                return Response({
+                    'user': UserListSerializer(user, context=self.get_serializer_context()).data,
+                    'message': "User logged successfully.",
+                },
+                    status=status.HTTP_200_OK
+                )
 
-        return Response({'message': "Invalid credentials, try again"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'message': "Invalid credentials, try again"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        except Exception as e:
+            raise Exception(e)

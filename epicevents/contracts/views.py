@@ -35,24 +35,24 @@ class ContractViewset(MultipleSerializerMixin, ModelViewSet):
     ordering_fields = ['client', 'client__email', 'date_created', 'amount']
 
     def get_queryset(self):
-        # print(self.kwargs)
-        # if 'client_pk' in self.kwargs:
-        #     queryset = Contract.objects.filter(client=self.kwargs['client_pk'])
-        # else:
+
         queryset = Contract.objects.all()
 
         return queryset
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        contract = serializer.save()
-        client = contract.client
-        client.status = True
-        client.save()
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            contract = serializer.save()
+            client = contract.client
+            client.status = True
+            client.save()
 
-        return Response({
-            'contract': ContractListSerializer(contract, context=self.get_serializer_context()).data,
-            'message': "Contract created successfully."},
-            status=status.HTTP_201_CREATED)
+            return Response({
+                'contract': ContractListSerializer(contract, context=self.get_serializer_context()).data,
+                'message': "Contract created successfully."},
+                status=status.HTTP_201_CREATED)
+        except Exception as e:
+            raise Exception(e)

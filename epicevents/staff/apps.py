@@ -7,4 +7,5 @@ class StaffConfig(AppConfig):
     name = 'staff'
 
     def ready(self):
-        group_init()
+        pass
+        # group_init()

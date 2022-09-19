@@ -39,49 +39,51 @@ class EventViewset(MultipleSerializerMixin, ModelViewSet):
 
     def get_queryset(self):
 
-        # if 'contract_pk' in self.kwargs:
-        #     queryset = Event.objects.filter(
-        #         contract_id=self.kwargs['contract_pk'])
-        # else:
         queryset = Event.objects.all()
 
         return queryset
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        contract = serializer.validated_data.get('contract')
-        if contract.event_id == None:
-            event = serializer.save()
-            contract.status = True
-            contract.event_id = event
-            contract.save()
-            return Response({
-                'event': EventListSerializer(event, context=self.get_serializer_context()).data,
-                'message': "Event created successfully."},
-                status=status.HTTP_201_CREATED)
-        else:
-            return Response({
-                'message': "Contract already has an event."},
-                status=status.HTTP_409_CONFLICT)
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            contract = serializer.validated_data.get('contract')
+            if contract.event_id == None:
+                event = serializer.save()
+                contract.status = True
+                contract.event_id = event
+                contract.save()
+                return Response({
+                    'event': EventListSerializer(event, context=self.get_serializer_context()).data,
+                    'message': "Event created successfully."},
+                    status=status.HTTP_201_CREATED)
+            else:
+                return Response({
+                    'message': "Contract already has an event."},
+                    status=status.HTTP_409_CONFLICT)
+        except Exception as e:
+            raise Exception(e)
 
     @ transaction.atomic
     def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance=instance,
-                                         data=request.data,
-                                         )
-        serializer.is_valid(raise_exception=True)
-        event = serializer.save()
-        contract = Contract.objects.filter(id=event.contract.id).first()
-        if event.event_status.status == 'CL':
-            contract.status = False
-        if event.event_status.status == 'OP':
-            contract.status = True
-        contract.save()
+        try:
+            instance = self.get_object()
+            serializer = self.get_serializer(instance=instance,
+                                             data=request.data,
+                                             )
+            serializer.is_valid(raise_exception=True)
+            event = serializer.save()
+            contract = Contract.objects.filter(id=event.contract.id).first()
+            if event.event_status.status == 'CL':
+                contract.status = False
+            if event.event_status.status == 'OP':
+                contract.status = True
+            contract.save()
 
-        return Response({
-            'event': EventListSerializer(event, context=self.get_serializer_context()).data,
-            'message': "Event updated successfully."},
-            status=status.HTTP_200_OK)
+            return Response({
+                'event': EventListSerializer(event, context=self.get_serializer_context()).data,
+                'message': "Event updated successfully."},
+                status=status.HTTP_200_OK)
+        except Exception as e:
+            raise Exception(e)
