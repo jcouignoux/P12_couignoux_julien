@@ -1,20 +1,27 @@
-from rest_framework.serializers import ModelSerializer, ValidationError
+from rest_framework.serializers import ModelSerializer
 
 from events.models import Event
-from contracts.models import Contract
 
 
-class EventListSerializer(ModelSerializer):
+class FieldMixin(object):
+    def get_field_names(self, *args, **kwargs):
+        if self.context['request'].user.role == 'MA' and self.context['request'].method == 'PUT':
+            field_names = ['support_contact']
+        else:
+            field_names = ['id', 'contract', 'support_contact',
+                           'event_status', 'attendees', 'event_date', 'notes']
+        if field_names:
+            return field_names
+
+        return super(FieldMixin, self).get_field_names(*args, **kwargs)
+
+
+class EventListSerializer(FieldMixin, ModelSerializer):
 
     class Meta:
         model = Event
         fields = ['id', 'contract', 'support_contact',
                   'event_status', 'attendees', 'event_date', 'notes']
-
-    def validate_contract(self, value):
-        if Contract.objects.filter(id=value.id).first().event_id is not None:
-            raise ValidationError('Contract already has an event')
-        return value
 
 
 class EventDetailSerializer(ModelSerializer):

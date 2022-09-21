@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from staff.init import group_init
 
 
 class StaffConfig(AppConfig):
@@ -6,8 +7,5 @@ class StaffConfig(AppConfig):
     name = 'staff'
 
     def ready(self):
-        from django.contrib.auth.models import Group
-
-        Group.objects.get_or_create(name='Management')
-        Group.objects.get_or_create(name='Sales')
-        Group.objects.get_or_create(name='Support')
+        pass
+        # group_init()

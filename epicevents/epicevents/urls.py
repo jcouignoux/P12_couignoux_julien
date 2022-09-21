@@ -18,6 +18,11 @@ from django.urls import path, include
 
 from staff.views import LoginAPIView
 
+
+# def trigger_error(request):
+#     division_by_zero = 1 / 0
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/staff/', include(('staff.urls', 'staff'), namespace='staff')),
@@ -26,4 +31,6 @@ urlpatterns = [
          'contracts'), namespace='contracts')),
     path('api/events/', include(('events.urls', 'events'), namespace='events')),
     path('login/', LoginAPIView.as_view(), name='login'),
+    path('logs/', include(('logs.urls', 'logs'), namespace='logs')),
+    # path('sentry-debug/', trigger_error),
 ]
