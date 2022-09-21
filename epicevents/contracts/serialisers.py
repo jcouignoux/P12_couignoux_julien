@@ -7,7 +7,6 @@ from events.serialisers import EventDetailSerializer
 
 class FieldMixin(object):
     def get_field_names(self, *args, **kwargs):
-        print(self.context)
         if self.context['request'].user.role == 'MA' and self.context['request'].method == 'PUT':
             field_names = ['sales_contact']
         else:
